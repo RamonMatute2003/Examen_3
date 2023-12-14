@@ -6,6 +6,7 @@ using Plugin.Maui.Audio;
 using System;
 using Firebase.Storage;
 using Plugin.Media;
+using Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;
 
 namespace Firebase_modelo_singleton
 {
@@ -56,6 +57,8 @@ namespace Firebase_modelo_singleton
             photo.Source= persona.photo_record;
             lbl_photo=persona.photo_record;
             lblaudio=persona.audio_record;
+            datePicker.Date=new DateTime(persona.fecha.Year,persona.fecha.Month,persona.fecha.Day);
+            timePicker.Time=new TimeSpan(persona.fecha.Hour,persona.fecha.Minute,persona.fecha.Second);
         }
 
         private async void actualizarButton_Clicked(object sender, EventArgs e)
@@ -64,24 +67,29 @@ namespace Firebase_modelo_singleton
             {
                 string nombreAntiguo = personaSeleccionada.descripcion;
 
+                DateTime newDate = new DateTime(datePicker.Date.Year,datePicker.Date.Month,datePicker.Date.Day,timePicker.Time.Hours,timePicker.Time.Minutes,0);
                 personaSeleccionada.descripcion = descripcionEntry.Text;
-                personaSeleccionada.fecha = DateTime.Now;
+                personaSeleccionada.fecha=newDate;
                 personaSeleccionada.audio_record=lblaudio;
                 personaSeleccionada.photo_record=lbl_photo;
+
+                DateTime date=new DateTime(DateTime.Now.Year,DateTime.Now.Month,DateTime.Now.Day,DateTime.Now.Hour,DateTime.Now.Minute,0);
+
+                if(date>newDate) {
+                    await DisplayAlert("Error","La fecha ya paso, pon una fecha correcta","OK");
+                    return;
+                }
 
                 try
                 {
                     var firebaseInstance = Singleton.Instance;
-
                     await firebaseInstance.UpdateData(personaSeleccionada.id_nota.ToString(),personaSeleccionada);
-
                     await DisplayAlert("Éxito", "Datos actualizados correctamente.", "OK");
                     await Navigation.PopAsync();
                 }
                 catch (Exception ex)
                 {
                     personaSeleccionada.descripcion = nombreAntiguo;
-                    //personaSeleccionada.fecha = edadAntigua;
 
                     await DisplayAlert("Error", $"Error al actualizar datos: {ex.Message}", "OK");
                 }

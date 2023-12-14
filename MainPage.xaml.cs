@@ -6,6 +6,7 @@ using Firebase.Auth.Providers;
 using System;
 using Firebase.Storage;
 using Plugin.Media;
+using System.Globalization;
 
 namespace Firebase_modelo_singleton{
     public partial class MainPage : ContentPage{
@@ -52,9 +53,18 @@ namespace Firebase_modelo_singleton{
                 return;
             }
 
-            try{
+            DateTime newDate = new DateTime(datePicker.Date.Year,datePicker.Date.Month,datePicker.Date.Day,timePicker.Time.Hours,timePicker.Time.Minutes,0);
+
+            DateTime date = new DateTime(DateTime.Now.Year,DateTime.Now.Month,DateTime.Now.Day,DateTime.Now.Hour,DateTime.Now.Minute,0);
+
+            if(date>newDate) {
+                await DisplayAlert("Error","La fecha ya paso, pon una fecha correcta","OK");
+                return;
+            }
+
+            try {
                 var firebaseInstance = Singleton.Instance;
-                Notas persona = new Notas { descripcion =description, fecha =DateTime.Now, audio_record=lblaudio, photo_record=lbl_photo};
+                Notas persona = new Notas { descripcion =description, fecha=newDate, audio_record=lblaudio, photo_record=lbl_photo};
 
                 await firebaseInstance.CreateData(persona);
 
@@ -84,6 +94,7 @@ namespace Firebase_modelo_singleton{
         }
 
         private async void btnGrabarAudio_Clicked(object sender,EventArgs e) {
+
             if(!isRecording) {
                 var permiso = await Permissions.RequestAsync<Permissions.Microphone>();
                 var permiso1 = await Permissions.RequestAsync<Permissions.StorageRead>();

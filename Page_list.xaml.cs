@@ -14,7 +14,7 @@ namespace Firebase_modelo_singleton
     {
         public static string id_nota;
         public static string audio_record, photo_record, descripcion;
-        public static DateTime fecha;
+        public static string fecha;
 
         public ObservableCollection<Notas> PeopleList { get; set; }
         
@@ -55,14 +55,14 @@ namespace Firebase_modelo_singleton
 
             var selectedPerson = (Notas) e.SelectedItem;
 
-            var action = await DisplayActionSheet($"Opciones para {selectedPerson.id_nota}", "Cancelar", null, "Editar", "Eliminar", "Reproducir audio");
+            var action = await DisplayActionSheet($"Opciones", "Cancelar", null, "Editar", "Eliminar", "Reproducir audio");
 
             if(selectedPerson!=null) {
                 id_nota=selectedPerson.id_nota;
                 audio_record=selectedPerson.audio_record;
                 photo_record=selectedPerson.photo_record;
                 descripcion=selectedPerson.descripcion;
-                fecha=selectedPerson.fecha;
+                fecha=selectedPerson.fecha.ToString();
             }
 
             var firebaseInstance = Singleton.Instance;

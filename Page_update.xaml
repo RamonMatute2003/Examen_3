@@ -11,6 +11,10 @@
 
         <Entry x:Name="descripcionEntry" Placeholder="Descripcion" FontSize="16" BackgroundColor="White" />
 
+        <DatePicker x:Name="datePicker" />
+
+        <TimePicker x:Name="timePicker" />
+
         <Button x:Name="btnGrabarAudio" Text="Grabar Audio" TextColor="White" Margin="5" Clicked="btnGrabarAudio_Clicked"/>
 
         <Button x:Name="actualizarButton" Text="Actualizar" Clicked="actualizarButton_Clicked" BackgroundColor="#4CAF50" TextColor="White" FontSize="16" Margin="0,0,0,10"/>
