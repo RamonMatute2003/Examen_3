@@ -16,8 +16,8 @@ namespace Firebase_modelo_singleton{
         string password = "Matute_10";
         string token = string.Empty;
         string rutastorage = "examen3-6b4c5.appspot.com";
-        string lblaudio;
-        string lbl_photo;
+        string lblaudio=null;
+        string lbl_photo=null;
         private readonly IAudioRecorder _audioRecorder;
         private bool isRecording = false;
         public string pathaudio, filename, path_photo;
@@ -62,6 +62,16 @@ namespace Firebase_modelo_singleton{
                 return;
             }
 
+            if(lblaudio==null){
+                await DisplayAlert("Error","Graba un audio","OK");
+                return;
+            }
+
+            if(lbl_photo==null){
+                await DisplayAlert("Error","Toma una foto","OK");
+                return;
+            }
+
             try {
                 var firebaseInstance = Singleton.Instance;
                 Notas persona = new Notas { descripcion =description, fecha=newDate, audio_record=lblaudio, photo_record=lbl_photo};
@@ -71,6 +81,9 @@ namespace Firebase_modelo_singleton{
                 await DisplayAlert("Éxito", "Datos subidos correctamente.", "OK");
 
                 descripcionEntry.Text = string.Empty;
+                lbl_photo=null;
+                lblaudio=null;
+                photo.Source=null;
             }catch (Exception ex){
                 await DisplayAlert("Error", $"Error al subir datos: {ex.Message}", "OK");
             }
@@ -182,7 +195,6 @@ namespace Firebase_modelo_singleton{
                     Console.WriteLine($"Error: {ex.Message}");
                     await DisplayAlert("Error","Ocurrió un error al procesar la grabación.","Ok");
                 }
-
 
                 photo.Source=ImageSource.FromStream(() => {
                     return photo_camera.GetStream();

@@ -80,6 +80,16 @@ namespace Firebase_modelo_singleton
                     return;
                 }
 
+                if(lblaudio==null) {
+                    await DisplayAlert("Error","Graba un audio","OK");
+                    return;
+                }
+
+                if(lbl_photo==null) {
+                    await DisplayAlert("Error","Toma una foto","OK");
+                    return;
+                }
+
                 try
                 {
                     var firebaseInstance = Singleton.Instance;

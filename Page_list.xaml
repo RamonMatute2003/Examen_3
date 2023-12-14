@@ -5,7 +5,7 @@
              Title="Page_list">
 
     <StackLayout x:Name="container">
-        <Label Text="Lista de Personas" FontSize="Large" HorizontalOptions="CenterAndExpand" Margin="0,20,0,10" />
+        <Label Text="Lista de notas" FontSize="Large" HorizontalOptions="CenterAndExpand" Margin="0,20,0,10" />
 
         <ListView x:Name="peopleListView"
                   ItemsSource="{Binding PeopleList}"

@@ -74,6 +74,9 @@
 	  <MauiXaml Update="Page_list.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Page_photo.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Page_update.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

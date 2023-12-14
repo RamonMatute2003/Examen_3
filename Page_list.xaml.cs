@@ -7,6 +7,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.ConstrainedExecution;
 
 namespace Firebase_modelo_singleton
 {
@@ -23,14 +24,7 @@ namespace Firebase_modelo_singleton
             InitializeComponent();
 
             PeopleList = new ObservableCollection<Notas>();
-            LoadData();
-
-            var sortedList = new List<Notas>(PeopleList);
-            sortedList=sortedList.OrderByDescending(i => i.fecha).ToList();
-
-            PeopleList=new ObservableCollection<Notas>(sortedList);
-
-            peopleListView.ItemsSource=PeopleList;  
+            LoadData(); 
         }
 
         protected override async void OnAppearing() {
@@ -42,10 +36,18 @@ namespace Firebase_modelo_singleton
         public void SetPeopleList(ObservableCollection<Notas> people)
         {
             PeopleList.Clear();
+
             foreach (var person in people)
             {
                 PeopleList.Add(person);
             }
+
+            var sortedList = new List<Notas>(PeopleList);
+            sortedList=sortedList.OrderBy(i => i.fecha).ToList();
+
+            PeopleList=new ObservableCollection<Notas>(sortedList);
+
+            peopleListView.ItemsSource=PeopleList;
         }
 
         private async void peopleListView_ItemSelected(object sender, SelectedItemChangedEventArgs e)
@@ -55,7 +57,7 @@ namespace Firebase_modelo_singleton
 
             var selectedPerson = (Notas) e.SelectedItem;
 
-            var action = await DisplayActionSheet($"Opciones", "Cancelar", null, "Editar", "Eliminar", "Reproducir audio");
+            var action = await DisplayActionSheet($"Opciones", "Cancelar", null, "Editar", "Eliminar", "Reproducir audio","Ver foto");
 
             if(selectedPerson!=null) {
                 id_nota=selectedPerson.id_nota;
@@ -73,6 +75,7 @@ namespace Firebase_modelo_singleton
                     pageUpdate.SetPersonaSeleccionada(selectedPerson);
                     await Navigation.PushAsync(pageUpdate);
                     break;
+
                 case "Eliminar":
                     try
                     {
@@ -89,12 +92,15 @@ namespace Firebase_modelo_singleton
                     break;
 
                 case "Reproducir audio":
-                    
                     try {
                         ReproducirAudio();
                     } catch(Exception ex) {
-                        await DisplayAlert("Error",$"Error al eliminar persona: {ex.Message}","OK");
+                        await DisplayAlert("Error",$"Error {ex.Message}","OK");
                     }
+                break;
+
+                case "Ver foto":
+                    await Navigation.PushAsync(new Page_photo());
                 break;
             }
 
@@ -109,7 +115,6 @@ namespace Firebase_modelo_singleton
 
             container.Add(mediaElement);
         }
-
 
         private async Task LoadData()
         {
